@@ -28,6 +28,7 @@ RUN pip install tqdm omegaconf==2.0.5 opencv-python-headless==4.5.1.48 scikit-le
 RUN pip install scikit-image==0.18.1 segmentation-models-pytorch==0.3.3 efficientnet-pytorch==0.7.1
 RUN pip install pillow click ml-collections
 RUN pip install pandas==1.3.5 monai==1.0.1 natsort yacs imutils
+RUN pip install nibabel GeodisTK SimpleITK
 
 # RUN echo "conda activate mlpipeline_segmentation" >> /etc/bash.bashrc
 

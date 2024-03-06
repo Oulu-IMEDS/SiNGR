@@ -157,6 +157,7 @@ def run_transformation(label_name, dataset, root_dir, gt_dir, output_dir):
 def main(label_name: str, dataset: str, root_dir: str, gt_dir: str, output_dir: str):
     temp_dir = "/mnt/d/workspace/lab_work/output/temp"
     os.makedirs(temp_dir, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
 
     run_transformation(label_name, dataset, root_dir, gt_dir, output_dir)
     show_data(dataset, output_dir, gt_dir, temp_dir)

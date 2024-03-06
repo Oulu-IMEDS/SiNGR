@@ -1,6 +1,5 @@
 import os
 import GeodisTK
-import FastGeodis
 import time
 import numpy as np
 import SimpleITK as sitk
@@ -26,6 +25,8 @@ def geodesic_distance_3d(I, S, spacing, lamb=1, n_iters=4, mode='exact'):
     iter: number of iteration for raster scanning.
     '''
     if mode == 'fast':
+        import FastGeodis
+
         I = torch.from_numpy(I).unsqueeze_(0).unsqueeze_(0).to('cuda')
         S = torch.from_numpy(1 - S.astype(np.float32)).unsqueeze_(0).unsqueeze_(0).to('cuda')
         v = 1e10
@@ -307,11 +308,10 @@ def write_mask(img, output_path, method, img_name, suffix="gd"):
     print(" ")
 
 
-def generate_geodesic_maps(method, dataset='FLARE', nb_classes=1, data_path='', output_path=''):
+def generate_geodesic_maps(method, mode, dataset='FLARE', nb_classes=1, data_path='', output_path=''):
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
-    mode = 'fast'
     print(mode, method)
 
     img_name_list = []
@@ -442,6 +442,7 @@ if __name__ == "__main__":
     '''
     parser = argparse.ArgumentParser(description='Geodesic Maps')
     parser.add_argument('--dataset', default='BraTS', help="options:[FLARE, BraTS]")
+    parser.add_argument('--mode', default='slow', help="options:[slow, fast]")
     # parser.add_argument('--num_classes', default=5, type=int, help="number of classes")
     parser.add_argument('--input_dir', help='input data directory')
     parser.add_argument('--output_dir', help='output data directory')
@@ -454,4 +455,4 @@ if __name__ == "__main__":
     elif args.dataset == 'LGG':
         num_classes = 1
 
-    generate_geodesic_maps('sgc', args.dataset, num_classes, args.input_dir, args.output_dir)
+    generate_geodesic_maps('sgc', args.mode, args.dataset, num_classes, args.input_dir, args.output_dir)
