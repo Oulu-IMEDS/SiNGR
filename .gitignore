@@ -3,6 +3,14 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+.vscode/
+datasets/
+experiments/
+*~
+.idea/*
+workdir/data/*
+!workdir/data/.gitkeep
+
 # C extensions
 *.so
 
