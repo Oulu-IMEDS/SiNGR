@@ -130,8 +130,6 @@ class SignedFocalLoss(nn.Module):
             loss = torch.sum(loss) / (num_pos + num_neg)
 
         else:
-            # loss = torch.mean(loss, dim=(0, 2, 3))
-            # loss = torch.sum(loss, dim=-1)
             loss = torch.mean(loss, dim=(0, 2, 3, 4))
 
         return loss

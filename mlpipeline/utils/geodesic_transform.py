@@ -65,50 +65,6 @@ def transform_gd_dist(dist, gt):
     return dist
 
 
-def show_data(dataset, root_dir, gt_dir, temp_dir):
-    sub_dirs = natsorted(list(Path(root_dir).glob("*")))
-
-    for si, sub_dir in enumerate(sub_dirs[:5]):
-        paths = list(Path(sub_dir).glob("*.nii.gz"))
-        sub_dir_name = sub_dir.name
-        raw_gt_path = Path(gt_dir) / sub_dir_name / f"{sub_dir_name}_seg.nii.gz"
-
-        if dataset == "BRATS":
-            raw_gt = np.transpose(merge_seg(raw_gt_path), [3, 2, 1, 0])
-        else:
-            raw_gt = get_data(raw_gt_path, is_seg=True)[0]
-            raw_gt = np.transpose(np.expand_dims(raw_gt, axis=0), [3, 2, 1, 0])
-        # count_data = []
-
-        for pi, path in enumerate(paths):
-            name = path.stem.replace(".nii", "")
-            raw_geo_gt = nib.load(path).get_fdata()
-
-            for class_index in range(0, raw_geo_gt.shape[-1]):
-                hard_class_data = raw_gt[..., class_index]
-                soft_class_data = raw_geo_gt[..., class_index]
-                sum_by_depth = np.sum(np.sum(hard_class_data, axis=0), axis=0)
-                crowded_depth = np.argmax(sum_by_depth)
-                layer = raw_geo_gt[:, :, crowded_depth, class_index]
-
-                if si == pi == 0:
-                    print(name, soft_class_data.min(), soft_class_data.max())
-                    print(soft_class_data[hard_class_data == 0].max(), soft_class_data[hard_class_data == 1].min())
-                    depth_index = 84 if dataset == "BRATS" else 15
-                    if class_index == 0:
-                        print(layer[depth_index, 92:112])
-                    elif class_index == 1:
-                        print(layer[depth_index, 79:99])
-                    elif class_index == 2:
-                        print(layer[depth_index, 130:142])
-
-                layer_image = np.clip(layer * 128 + 128, a_min=0, a_max=255).astype(np.uint8)
-                heatmap = utils.convert_grayscale_to_heatmap(layer_image)
-                cv2.imwrite(os.path.join(temp_dir, f"{name}_{class_index}_soft.png"), heatmap)
-        # print(count_data)
-    return
-
-
 def run_transformation(label_name, dataset, root_dir, gt_dir, output_dir):
     sub_dirs = natsorted(list(Path(root_dir).glob("*")))
     root_name = Path(root_dir).stem
@@ -117,7 +73,6 @@ def run_transformation(label_name, dataset, root_dir, gt_dir, output_dir):
     for si, sub_dir in enumerate(sub_dirs):
         paths = list(Path(sub_dir).glob("*.nii.gz"))
         sub_dir_name = sub_dir.name
-        print(sub_dir_name)
         os.makedirs(Path(output_dir) / sub_dir_name, exist_ok=True)
 
         hard_gt_path = Path(gt_dir) / sub_dir_name / f"{sub_dir_name}_seg.nii.gz"
@@ -137,8 +92,6 @@ def run_transformation(label_name, dataset, root_dir, gt_dir, output_dir):
                 geo_gt = transform_gd_dist(geo_gt, hard_gt)
             else:
                 geo_gt = transform_geo_dist(geo_gt, hard_gt, label_name)
-            if si < 5:
-                print(raw_geo_gt.shape, raw_geo_gt.max(), geo_gt.shape, geo_gt.min(), geo_gt.max())
 
             geo_gt = geo_gt.cpu().numpy()
             permuted_geo_gt = np.transpose(geo_gt, [3, 2, 1, 0])
@@ -155,12 +108,11 @@ def run_transformation(label_name, dataset, root_dir, gt_dir, output_dir):
 @click.option("--gt_dir")
 @click.option("--output_dir")
 def main(label_name: str, dataset: str, root_dir: str, gt_dir: str, output_dir: str):
-    temp_dir = "/mnt/d/workspace/lab_work/output/temp"
+    temp_dir = "./temp"
     os.makedirs(temp_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
 
     run_transformation(label_name, dataset, root_dir, gt_dir, output_dir)
-    show_data(dataset, output_dir, gt_dir, temp_dir)
 
 
 if __name__ == "__main__":

@@ -360,13 +360,6 @@ def generate_geodesic_maps(method, mode, dataset='FLARE', nb_classes=1, data_pat
                 t2_gd = get_SG_distance(t2_path, seg_path, nb_classes, dataset, mode=mode)
                 write_mask(t2_gd, output_path, f'{mode}_{method}', img_name, f"{mode}_{method}_t2")
 
-                if img_index < 5:
-                    print(
-                        t1ce_gd.shape, t1ce_gd.min(), t1ce_gd.max(),
-                        t1_gd.shape, t2_gd.shape,
-                        flair_gd.shape,flair_gd.min(), flair_gd.max(),
-                    )
-
             elif method == 'sgc':
                 seg = merge_seg(seg_path)
 
@@ -382,28 +375,6 @@ def generate_geodesic_maps(method, mode, dataset='FLARE', nb_classes=1, data_pat
                 t2_gd = get_SGC_distance(t2_path, seg, nb_classes, dataset, mode=mode)
                 write_mask(t2_gd, output_path, f'{mode}_{method}', img_name, f"{mode}_sg_t2")
 
-                if img_index < 5:
-                    print(
-                        t1ce_gd.shape, t1ce_gd.min(), t1ce_gd.max(),
-                        t1_gd.shape, t2_gd.shape,
-                        flair_gd.shape,flair_gd.min(), flair_gd.max(),
-                    )
-
-            elif method == 'ls':
-                epsilon = 0.5
-                seg = merge_seg(seg_path)
-                gd = np.zeros_like(seg).astype(float)
-                for i in range(0, seg.shape[0]):
-                    gt = torch.tensor(seg[i, ...], dtype=int).view(1, seg.shape[1], seg.shape[2], seg.shape[3])
-                    soft_label = functional.one_hot(gt, 2).permute(0, 4, 1, 2, 3).to(torch.float)
-                    soft_label = torch.flip(soft_label, dims=[1])
-                    soft_label *= (1 - epsilon)
-                    soft_label += (epsilon / num_classes)
-                    soft_label = soft_label[0, 0, :, :].cpu().numpy()
-                    gd[i, ...] = soft_label
-
-                write_mask(gd, output_path, f'{method}', img_name, f"{mode}_ls")
-
         elif dataset == "LGG":
             method = 'sgc'
             flair_0_path = os.path.join(data_path, img_name, img_name + "_flair_0.nii.gz")
@@ -418,13 +389,6 @@ def generate_geodesic_maps(method, mode, dataset='FLARE', nb_classes=1, data_pat
             write_mask(flair_1_gd, output_path, f'{mode}_{method}', img_name, f"{mode}_sgc_flair_1")
             flair_2_gd = get_SGC_distance(flair_2_path, seg, nb_classes, mode=mode)
             write_mask(flair_2_gd, output_path, f'{mode}_{method}', img_name, f"{mode}_sgc_flair_2")
-
-            if img_index < 5:
-                print(
-                    flair_0_gd.shape, flair_0_gd.min(), flair_0_gd.max(),
-                    flair_1_gd.shape, flair_2_gd.shape,
-                    seg.shape,
-                )
 
         else:
             print('Add the dataset similar to FLARE')
