@@ -9,7 +9,7 @@ from monai.networks.blocks import UnetOutBlock, UnetBasicBlock, UnetUpBlock
 
 class UpBlock_light(nn.Module):
     """
-    An upsampling module that can be used for UNETR: "Hatamizadeh et al.,
+    An upsampling module that can be used for UNETR:
     """
 
     def __init__(
@@ -56,7 +56,7 @@ class UpBlock_light(nn.Module):
 
 class UnetrUpBlock_light(nn.Module):
     """
-    An upsampling module that can be used for UNETR: "Hatamizadeh et al.,
+    An upsampling module that can be used for UNETR:
     """
 
     def __init__(
