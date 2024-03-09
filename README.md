@@ -52,7 +52,7 @@ python -m mlpipeline.train.evaluate \
     --metadata_path=/path/to/test_split.pkl \
     --dataset_name=${DATASET} \
     --seeds=${SEEDS} \
-    --folds=0,1,2,3,4
+    --folds=0
 ```
 where
 - DATASET: is either `brats` or `lgg`.
