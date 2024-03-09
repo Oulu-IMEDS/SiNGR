@@ -39,7 +39,7 @@ python -m mlpipeline.train.run experiment=${EXP_NAME} \
         model.params.cfg.arch=${ARCH_NAME}
 ```
 where
-- <EXP_NAME>: experiment setting can be `brats_uncertainty_sem_seg`, `brats_sem_seg`, `lgg_uncertainty_sem_seg`, and `lgg_sem_seg`.
+- <EXP_NAME>: experiment setting can be `brats_uncertainty_sem_seg`, `brats_sem_seg`, `lgg_uncertainty_sem_seg`, or `lgg_sem_seg`.
 - <ARCH_NAME>: architecture name can be `EoFormer`, `Unet3D`, `UnetPP3D`, `SegResNet`, `UNETR`, `SwinUNETR`, `TransBTS`, or `NestedFormer`.
 
 ## Evaluation
