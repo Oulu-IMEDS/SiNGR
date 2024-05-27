@@ -9,7 +9,7 @@ from monai.networks.blocks import UnetOutBlock, UnetBasicBlock, UnetUpBlock
 
 class UpBlock_light(nn.Module):
     """
-    An upsampling module that can be used for UNETR:
+    An upsampling module that can be used for UNETR: "Hatamizadeh et al.,
     """
 
     def __init__(
@@ -56,7 +56,7 @@ class UpBlock_light(nn.Module):
 
 class UnetrUpBlock_light(nn.Module):
     """
-    An upsampling module that can be used for UNETR:
+    An upsampling module that can be used for UNETR: "Hatamizadeh et al.,
     """
 
     def __init__(
@@ -119,6 +119,7 @@ class DoubleConv(nn.Module):
     def __init__(self, in_channels, out_channels, num_groups=8):
         super().__init__()
         self.double_conv = nn.Sequential(
+          
             nn.Conv3d(in_channels, out_channels, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm3d(out_channels),
             # nn.GroupNorm(num_groups=num_groups, num_channels=out_channels),

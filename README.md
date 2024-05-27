@@ -1,8 +1,8 @@
 # SiNGR
 SiNGR: Brain Tumor Segmentation via Signed Normalized Geodesic Transform Regression
 
-![SiNGR workflow](./imgs/SiNGR_workflow.png "SiNGR workflow")
 
+![SiNGR workflow](./imgs/SiNGR_workflow.png "SiNGR workflow")
 ## Dependencies
 
 We provide file `env.yaml` for dependencies. If generating the Geodesic files is needed, use `pip install -r requirements_geo.txt`.
@@ -10,6 +10,7 @@ We provide file `env.yaml` for dependencies. If generating the Geodesic files is
 Alternatively, it is possible to use fast implementation of Geodesic: `pip install FastGeodis`.
 
 ## Installation
+
 ```bash
 conda env create -f env.yaml
 conda activate singr
@@ -56,4 +57,5 @@ python -m mlpipeline.train.evaluate \
 ```
 where
 - DATASET: is either `brats` or `lgg`.
+
 
