@@ -1,0 +1,96 @@
+pipeline_cls: mlpipeline.train.semantic_segmentation.SemanticSegmentation
+parameter_setting: ${model.params.cfg.arch}_${model.params.cfg.test_on_patches}_${data.label_name}_${data.image_size}_${data.image_depth}_${model.params.cfg.loss_name}_${model.params.cfg.base_loss}_${model.params.cfg.loss_type}_${model.params.cfg.alpha}_${model.params.cfg.pos_weight}_${model.params.cfg.use_opposite_sign}_${model.params.cfg.directional_weight}_lr:${optimizer.params.lr}_wd:${optimizer.params.weight_decay}
+n_gpus: 1
+eval_baseline_only: true
+data:
+  root_dir: /opt/data/brain_images
+  dataset_cls: mlpipeline.data.dataset.LGGDataset
+  pkl_filename: cv_split_5folds_lgg_${seed}.pkl
+  pkl_filename_test: cv_split_5folds_lgg_test_${seed}.pkl
+  image_dir:
+    lgg: /opt/data/LGG/lggflair_3d
+    geo: /opt/data/LGG/geodesic
+  image_size: 128
+  image_depth: 32
+  data_dir: ${data.root_dir}/workdir/datasets
+  image_root:
+  fold_index: 0
+  num_classes: 1
+  num_channels: 3
+  num_dims: 3
+  dataset: lgg
+  label_name: fast_sgc_margin
+  num_workers: 16
+  batch_size: 2
+  valid_batch_size: 1
+  sw_batch_size: 2
+  gt_mode:
+
+  augs:
+    train:
+    val:
+
+  mean:
+  std:
+
+train:
+  num_epochs: 300
+  distributed: false
+  continue_train: false
+  inference_only: false
+
+model:
+  name: SemanticSegmentation
+  cls: mlpipeline.models.semantic_segmentation.${model.name}
+  pretrained_encoder:
+  pretrained_model:
+  find_unused_parameters: false
+  params:
+    cfg:
+      arch: Unet3D
+      encoder_name:
+      encoder_weights: imagenet
+      num_classes: ${data.num_classes}
+      num_channels: ${data.num_channels}
+      image_size: ${data.image_size}
+      image_depth: ${data.image_depth}
+      loss_name: distance-signedfocal
+      loss_mode: binary
+      loss_type: 1
+      base_loss: l1d
+      alpha: 2.0
+      beta: 1.0
+      pos_weight: 1.0
+      use_opposite_sign: true
+      directional_weight: 1.0
+      am_constant: 0.0
+      distance_weight: 1.0
+      dropout: 0.1
+      dataset: ${data.dataset}
+      pretrained: false
+      test_on_patches: true
+      label_name: ${data.label_name}
+
+optimizer:
+  cls: torch.optim.Adam
+  params:
+    params: ~
+    lr: 1e-4
+    weight_decay: 1e-5
+  scheduler:
+    warmup_for: 0
+    type: milestones
+    gamma: 0.1
+    milestones: [220]
+
+metrics:
+  mode: binary
+  output_mode: tanh
+  n_classes: 1
+  threshold: 0.0
+  key_metric: F1
+  reduction: macro-imagewise
+
+checkpointer:
+  keep_old: false
+  comparator: gt
