@@ -1,6 +1,9 @@
-# SiNGR
-SiNGR: Brain Tumor Segmentation via Signed Normalized Geodesic Transform Regression
+# <a href=https://arxiv.org/pdf/2405.16813>SiNGR</a>
+**SiNGR: Brain Tumor Segmentation via Signed Normalized Geodesic Transform Regression**
 
+Accepted as a paper conference at **MICCAI 2024**
+
+Arxiv: <a href=https://arxiv.org/pdf/2405.16813>Link</a>
 
 ![SiNGR workflow](./imgs/SiNGR_workflow.png "SiNGR workflow")
 ## Dependencies
