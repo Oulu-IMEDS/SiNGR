@@ -6,6 +6,9 @@ Accepted as a paper conference at **MICCAI 2024**
 Arxiv: <a href=https://arxiv.org/pdf/2405.16813>Link</a>
 
 ![SiNGR workflow](./imgs/SiNGR_workflow.png "SiNGR workflow")
+
+![SiNGR vs. hard-label-based approach](./imgs/SiNGR_results.png "SiNGR vs. hard-label-based approach")
+
 ## Dependencies
 
 We provide file `env.yaml` for dependencies. If generating the Geodesic files is needed, use `pip install -r requirements_geo.txt`.
